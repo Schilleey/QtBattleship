@@ -1,2 +1,2 @@
 # QtBattleship
-Battleship game written with the Qt framework.
+Battleship game written with the Qt (5.5) framework.
