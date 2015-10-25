@@ -3,12 +3,17 @@ import QtQuick.Window 2.2
 
 Window {
     visible: true
+    width:320
+    height:480
 
-    MainForm {
+/*
+    MainMenu {
         anchors.fill: parent
-        mouseArea.onClicked: {
-            Qt.quit();
-        }
     }
+*/
+/*    NewGame {
+        anchors.fill:parent
+    }
+ */
 }
 
