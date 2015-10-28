@@ -35,6 +35,10 @@ Rectangle {
            Button {
                id: cancelJoinGameButton
                text: qsTr("Cancel")
+               onClicked: {
+                   joinGame.visible = false;
+                   mainMenu.visible = true;
+               }
            }
        }
     }

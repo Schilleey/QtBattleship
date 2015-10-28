@@ -75,6 +75,10 @@ Rectangle {
            Button {
                id: cancelNewGameButton
                text: qsTr("Cancel")
+               onClicked: {
+                   newGame.visible = false;
+                   mainMenu.visible = true;
+               }
            }
        }
     }

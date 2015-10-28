@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>src/qml/main.qml</file>
+        <file>src/qml/MainMenu.qml</file>
+        <file>src/qml/NewGame.qml</file>
+        <file>src/qml/JoinGame.qml</file>
+    </qresource>
+</RCC>
