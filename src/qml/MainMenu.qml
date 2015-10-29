@@ -1,6 +1,8 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.3
 
+import com.hsa.qtbattleship 1.0
+
 Rectangle {
     id: mainMenuContainer
     property int buttonsMargin: 10
@@ -55,6 +57,9 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: joinGameButton.bottom
             anchors.topMargin: buttonsMargin
+            onClicked: {
+                console.log("Options button pressed: NumFields = " + Settings.numFields + ", ShipPoints: " + Settings.shipPoints);
+            }
         }
 
     }

@@ -4,5 +4,13 @@
         <file>src/qml/MainMenu.qml</file>
         <file>src/qml/NewGame.qml</file>
         <file>src/qml/JoinGame.qml</file>
+        <file>src/qml/components/GuiControls/NumberInput.qml</file>
+        <file>src/qml/components/GuiControls/qmldir</file>
+    </qresource>
+    <qresource prefix="/images">
+        <file>resources/arrow.png</file>
+        <file>resources/arrow_hover.png</file>
+        <file>resources/arrow2.png</file>
+        <file>resources/arrow2_hover.png</file>
     </qresource>
 </RCC>

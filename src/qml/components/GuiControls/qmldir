@@ -1,0 +1,2 @@
+module GuiControls
+NumberInput 1.0 NumberInput.qml
