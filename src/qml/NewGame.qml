@@ -3,7 +3,7 @@ import QtQuick.Controls 1.3
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.2
 
-import com.hsa.qtbattleship 1.0
+import QtBattleship 1.0
 import GuiControls 1.0
 
 

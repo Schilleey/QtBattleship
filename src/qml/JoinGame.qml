@@ -18,11 +18,15 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
 
         }
-       TextEdit {
-           id: ipToConnectTo
+       TextInput {
+            id: ipToConnectTo
 
-           anchors.horizontalCenter: parent.horizontalCenter
-           text: "192.168.0.128" //TODO: set by User!
+            anchors.horizontalCenter: parent.horizontalCenter
+            validator: RegExpValidator {
+                regExp:/^(([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))$/
+            }
+            inputMask: "000.000.000.000;0"
+            text: "192.168.0.100"
        }
 
 

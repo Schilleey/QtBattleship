@@ -1,7 +1,7 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.3
 
-import com.hsa.qtbattleship 1.0
+import QtBattleship 1.0
 
 Rectangle {
     id: mainMenuContainer

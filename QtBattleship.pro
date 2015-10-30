@@ -4,10 +4,16 @@ QT += qml quick
 CONFIG += c++11
 
 SOURCES += src/main.cpp \
-    src/settings.cpp
+    src/settings.cpp \
+    src/battlefield.cpp \
+    src/gameapplication.cpp \
+    src/gameengine.cpp
 
 HEADERS += \
-    src/settings.h
+    src/settings.h \
+    src/battlefield.h \
+    src/gameapplication.h \
+    src/gameengine.h
 
 RESOURCES += qml.qrc
 

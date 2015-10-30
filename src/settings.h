@@ -1,3 +1,14 @@
+/**
+ * \class Settings
+ *
+ * \brief Global game settings
+ *
+ * This class provides all informations about the game context,
+ * such as the number of rows and columns or the shippoints. The
+ * Settings object is implemented as a singleton.
+ *
+ */
+
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
@@ -16,7 +27,7 @@ class Settings : public QObject
     Settings();
 
 public:
-    static QObject* qmlInstance(QQmlEngine* engine, QJSEngine* scriptEngine);
+    static QObject* qmlInstance(QQmlEngine* engine, QJSEngine* scriptEngine); ///< For singleton creation
 
     int numFields() const;
     void setNumFields(int numFields);
@@ -29,8 +40,8 @@ signals:
     void shipPointsChanged();
 
 private:
-    int _numFields;  // Number of rows and columns
-    int _shipPoints; // Number of ship points
+    int _numFields;  ///< Number of rows and columns
+    int _shipPoints; ///< Number of ship points
 };
 
 #endif // SETTINGS_H
