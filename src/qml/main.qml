@@ -7,6 +7,7 @@ import QtBattleship 1.0
 
 
 ApplicationWindow {
+    id: mainWindow
     visible: true
     width: 600
     height: 400

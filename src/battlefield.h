@@ -11,20 +11,31 @@
 #define BATTLEFIELD_H
 
 #include <QObject>
+#include <QAbstractListModel>
+#include <QVector>
 #include <QQmlEngine>
 
-#include "settings.h"
+#include "fielddata.h"
 
 
-class BattleField : public QObject
+class BattleField : public QAbstractListModel
 {
     Q_OBJECT
 
 public:
     BattleField(QObject* parent = nullptr);
 
-public slots:
-    void render(); ///< Render the battlefield
+    Q_INVOKABLE void initialize();
+
+    int rowCount(const QModelIndex &parent) const override;
+    int columnCount(const QModelIndex &parent) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+
+private:
+    QVector<FieldData*> _model;
+
+    int indexToRow(const int index) const;
+    int indexToColumn(const int index) const;
 };
 
 #endif // BATTLEFIELD_H

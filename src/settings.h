@@ -24,10 +24,8 @@ class Settings : public QObject
     Q_PROPERTY(int numFields READ numFields WRITE setNumFields NOTIFY numFieldsChanged)
     Q_PROPERTY(int shipPoints READ shipPoints WRITE setShipPoints NOTIFY shipPointsChanged)
 
-    Settings();
-
 public:
-    static QObject* qmlInstance(QQmlEngine* engine, QJSEngine* scriptEngine); ///< For singleton creation
+    static QObject* qmlInstance(QQmlEngine* engine, QJSEngine* scriptEngine); ///< For qml singleton creation
 
     int numFields() const;
     void setNumFields(int numFields);
@@ -35,13 +33,19 @@ public:
     int shipPoints() const;
     void setShipPoints(int shipPoints);
 
+    static Settings* instance();
+
 signals:
     void numFieldsChanged();
     void shipPointsChanged();
 
 private:
+    explicit Settings(QObject* parent = nullptr);
+
     int _numFields;  ///< Number of rows and columns
     int _shipPoints; ///< Number of ship points
+
+    static Settings* _instance; ///< Actual instance of the singleton
 };
 
 #endif // SETTINGS_H

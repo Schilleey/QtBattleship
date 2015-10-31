@@ -6,6 +6,8 @@ import QtQuick.Layouts 1.2
 import QtBattleship 1.0
 import GuiControls 1.0
 
+import "UILogic.js" as UILogic
+
 
 Rectangle {
     id: newGameContainer
@@ -130,6 +132,11 @@ Rectangle {
                onClicked: {
                    Settings.numFields = numberInputBFSize.text;
                    Settings.shipPoints = numberInputPoints.text;
+
+                   newGame.visible = false
+
+                   engine.battlefield.initialize();
+                   UILogic.createBattleField("playerboard");
                }
            }
            Button {

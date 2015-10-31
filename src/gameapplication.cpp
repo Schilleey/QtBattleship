@@ -6,6 +6,8 @@
 #include "gameapplication.h"
 #include "gameengine.h"
 #include "settings.h"
+#include "fielddata.h"
+#include "fieldview.h"
 
 
 GameApplication::GameApplication(QObject *parent)
@@ -40,7 +42,14 @@ bool GameApplication::showQmlWindow()
 
 bool GameApplication::registerTypes()
 {
+    // Singletons
     qmlRegisterSingletonType<Settings>("QtBattleship", 1, 0, "Settings", &Settings::qmlInstance);
+
+    // Standard Qml types
+    qmlRegisterType<FieldView>("QtBattleship", 1, 0, "FieldView");
+
+    // Meta objects
+    qRegisterMetaType<FieldData>("FieldData");
 
     return true;
 }
