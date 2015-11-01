@@ -2,6 +2,7 @@
 #define FIELDVIEW_H
 
 #include <QtQuick>
+#include <QImage>
 #include <QString>
 
 
@@ -24,6 +25,7 @@ signals:
 
 private:
     QVariant _data;
+    QImage _image;
 };
 
 #endif // FIELDVIEW_H

@@ -2,7 +2,7 @@
 
 
 FieldData::FieldData()
-    : _type(0), _color("#ff0000")
+    : _type(0), _color("#ffffff")
 {
 
 }
@@ -25,4 +25,31 @@ QString FieldData::color() const
 void FieldData::setColor(const QString &color)
 {
     _color = color;
+}
+
+int FieldData::part() const
+{
+    return _part;
+}
+
+void FieldData::setPart(int part)
+{
+    _part = part;
+}
+
+int FieldData::orientation() const
+{
+    return _orientation;
+}
+
+void FieldData::setOrientation(int orientation)
+{
+    _orientation = orientation;
+}
+
+void FieldData::setData(int type, int part, int orientation)
+{
+    setType(type);
+    setPart(part);
+    setOrientation(orientation);
 }

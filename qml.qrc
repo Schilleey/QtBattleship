@@ -8,11 +8,17 @@
         <file>src/qml/components/GuiControls/qmldir</file>
         <file>src/qml/BattleField.qml</file>
         <file>src/qml/UILogic.js</file>
+        <file>resources/BattleShip_1.png</file>
+        <file>resources/BattleShip_2.png</file>
+        <file>resources/BattleShip_3.png</file>
     </qresource>
     <qresource prefix="/images">
         <file>resources/arrow.png</file>
         <file>resources/arrow_hover.png</file>
         <file>resources/arrow2.png</file>
         <file>resources/arrow2_hover.png</file>
+        <file>resources/BattleShip_1.png</file>
+        <file>resources/BattleShip_2.png</file>
+        <file>resources/BattleShip_3.png</file>
     </qresource>
 </RCC>

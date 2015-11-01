@@ -26,9 +26,9 @@ public:
     BattleField(QObject* parent = nullptr);
 
     Q_INVOKABLE void initialize();
+    Q_INVOKABLE void setField(int row, int column, int data);
 
     int rowCount(const QModelIndex &parent) const override;
-    int columnCount(const QModelIndex &parent) const override;
     QVariant data(const QModelIndex &index, int role) const override;
 
 private:

@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.2
 
 import QtBattleship 1.0
@@ -86,6 +87,16 @@ Item {
                         text: canvas.rowNames[index]
                     }
                 }
+            }
+        }
+
+        Button {
+            id: testButton
+            anchors.left: boardfields.right
+            anchors.bottom: boardfields.top
+            text: qsTr("Test Signal")
+            onClicked: {
+                engine.battlefield.setField(0, 0, 0);
             }
         }
     }

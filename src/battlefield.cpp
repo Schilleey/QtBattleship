@@ -1,6 +1,7 @@
 #include "battlefield.h"
 #include "settings.h"
 
+#include <QColor>
 #include <QDebug>
 
 
@@ -21,6 +22,26 @@ void BattleField::initialize()
     _model[2 * size + 4]->setColor("black");
     _model[3 * size + 4]->setColor("cyan");
     _model[4 * size + 4]->setColor("yellow");
+
+    // BattleShip
+    _model[1 * size + 1]->setData(FieldData::BattleShip, 1, FieldData::Vertical);
+    _model[2 * size + 1]->setData(FieldData::BattleShip, 2, FieldData::Vertical);
+    _model[3 * size + 1]->setData(FieldData::BattleShip, 2, FieldData::Vertical);
+    _model[4 * size + 1]->setData(FieldData::BattleShip, 3, FieldData::Vertical);
+}
+
+void BattleField::setField(int row, int column, int data)
+{
+    Q_UNUSED(data);
+
+    int size = Settings::instance()->numFields();
+    int position = row * size + column;
+
+    QColor randomColor(rand()%255, rand()%255, rand()%255);
+    _model[position]->setColor(randomColor.name());
+
+    QModelIndex index = createIndex(position, 0);
+    emit dataChanged(index, index);
 }
 
 int BattleField::rowCount(const QModelIndex &parent) const
@@ -29,16 +50,8 @@ int BattleField::rowCount(const QModelIndex &parent) const
     return _model.size();
 }
 
-int BattleField::columnCount(const QModelIndex &parent) const
-{
-    Q_UNUSED(parent);
-    return Settings::instance()->numFields();
-}
-
 QVariant BattleField::data(const QModelIndex &index, int role) const
 {
-//    qDebug() << "Row: " << index.row() << "Col: " << index.column();
-
     if(!index.isValid())
         return QVariant::Invalid;
 
