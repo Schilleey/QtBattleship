@@ -4,7 +4,7 @@
 Settings* Settings::_instance = nullptr;
 
 Settings::Settings(QObject* parent)
-    : QObject(parent), _numFields(16), _shipPoints(32)
+    : QObject(parent), _numFields(16), _shipPoints(32), _fieldSize(20)
 {
 }
 
@@ -42,5 +42,15 @@ void Settings::setShipPoints(int shipPoints)
 Settings *Settings::instance()
 {
     return _instance;
+}
+
+int Settings::fieldSize() const
+{
+    return _fieldSize;
+}
+
+void Settings::setFieldSize(int fieldSize)
+{
+    _fieldSize = fieldSize;
 }
 

@@ -2,7 +2,7 @@
 #define FIELDVIEW_H
 
 #include <QtQuick>
-#include <QImage>
+#include <QtSvg/QSvgRenderer>
 #include <QString>
 
 
@@ -25,7 +25,7 @@ signals:
 
 private:
     QVariant _data;
-    QImage _image;
+    QSvgRenderer _svgRenderer;
 };
 
 #endif // FIELDVIEW_H

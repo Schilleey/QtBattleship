@@ -23,7 +23,20 @@ void FieldView::paint(QPainter *painter)
     painter->fillRect(boundingRect(), brush);
 
     if(fielddata.type() != FieldData::None)
-        painter->drawImage(boundingRect(), _image);
+    {
+        if(_svgRenderer.isValid())
+        {
+            const QRectF& rect = boundingRect();
+
+            if(fielddata.orientation() == FieldData::Vertical)
+            {
+                painter->translate(rect.width(), 0.0);
+                painter->rotate(90.0);
+            }
+
+            _svgRenderer.render(painter, rect);
+        }
+    }
 }
 
 QVariant FieldView::data() const
@@ -48,17 +61,10 @@ void FieldView::setData(const QVariant &data)
         }
     case FieldData::BattleShip:
         {
-            const QString imagePath = QString(":/images/resources/BattleShip_%1.png").arg(fielddata.part());
-            _image.load(imagePath, "PNG");
+            const QString imagePath = QString(":/images/resources/BattleShip_%1.svg").arg(fielddata.part());
+            _svgRenderer.load(imagePath);
             break;
         }
-    }
-
-    if(fielddata.orientation() == FieldData::Vertical)
-    {
-        QTransform imageTransformation;
-        imageTransformation.rotate(90.0);
-        _image = _image.transformed(imageTransformation);
     }
 
     update();

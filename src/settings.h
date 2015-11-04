@@ -23,6 +23,7 @@ class Settings : public QObject
 
     Q_PROPERTY(int numFields READ numFields WRITE setNumFields NOTIFY numFieldsChanged)
     Q_PROPERTY(int shipPoints READ shipPoints WRITE setShipPoints NOTIFY shipPointsChanged)
+    Q_PROPERTY(int fieldSize READ fieldSize WRITE setFieldSize NOTIFY fieldSizeChanged)
 
 public:
     static QObject* qmlInstance(QQmlEngine* engine, QJSEngine* scriptEngine); ///< For qml singleton creation
@@ -35,15 +36,20 @@ public:
 
     static Settings* instance();
 
+    int fieldSize() const;
+    void setFieldSize(int fieldSize);
+
 signals:
     void numFieldsChanged();
     void shipPointsChanged();
+    void fieldSizeChanged();
 
 private:
     explicit Settings(QObject* parent = nullptr);
 
     int _numFields;  ///< Number of rows and columns
     int _shipPoints; ///< Number of ship points
+    int _fieldSize;  ///< Size of one field on the board
 
     static Settings* _instance; ///< Actual instance of the singleton
 };

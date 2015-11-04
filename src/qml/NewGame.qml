@@ -133,7 +133,7 @@ Rectangle {
                    Settings.numFields = numberInputBFSize.text;
                    Settings.shipPoints = numberInputPoints.text;
 
-                   newGame.visible = false
+                   newGame.visible = false;
 
                    engine.battlefield.initialize();
                    UILogic.createBattleField("playerboard");
