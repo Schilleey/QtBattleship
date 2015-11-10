@@ -41,24 +41,28 @@ bool BattleField::setShip(int row, int column, FieldData::ImageType type, FieldD
             shipLength = 4;
             break;
         }
+    default:
+        break;
     }
 
     if(shipLength == 0)
         return false;
 
-    int xleft = column - 1;
-    int ytop = row - 1;
+    int xleft = (column == 0) ? column : (column - 1);
+    int ytop = (row == 0) ? row : (row - 1);
     int xright, ybottom;
+
+    int size = Settings::instance()->numFields();
 
     if(orientation == FieldData::Horizontal) // Horizontal
     {
-        xright = xleft + shipLength + 1;
-        ybottom = ytop + 2;
+        xright = ((xleft + shipLength + 1) == size) ? (xleft + shipLength) : (xleft + shipLength + 1);
+        ybottom = ((ytop + 2) == size) ? (ytop + 1) : (ytop + 2);
     }
     else // Vertical
     {
-        xright = xleft + 2;
-        ybottom = ytop + shipLength + 1;
+        xright = ((xleft + 2) == size) ? (xleft + 1) : (xleft + 2);
+        ybottom = ((ytop + shipLength + 1) == size) ? (ytop + shipLength) : (ytop + shipLength + 1);
     }
 
     // Check if ship can be placed
@@ -73,7 +77,7 @@ bool BattleField::setShip(int row, int column, FieldData::ImageType type, FieldD
         getFieldData(row, column + 2)->setData(type, 2, orientation);
         getFieldData(row, column + 3)->setData(type, 3, orientation);
 
-        updateRect(row, column, row, column + shipLength);
+        updateRect(row, column, row, column + shipLength - 1);
     }
     else
     {
@@ -82,7 +86,7 @@ bool BattleField::setShip(int row, int column, FieldData::ImageType type, FieldD
         getFieldData(row + 2, column)->setData(type, 2, orientation);
         getFieldData(row + 3, column)->setData(type, 3, orientation);
 
-        updateRect(row, column, row + shipLength, column);
+        updateRect(row, column, row + shipLength - 1, column);
     }
 
     return true;
