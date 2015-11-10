@@ -6,7 +6,7 @@ import QtBattleship 1.0
 
 
 Rectangle {
-    property int fieldSize: Settings.fieldSize = parseInt(mainWindow.height * 0.055)
+    property int fieldSize: Settings.fieldSize = (mainWindow.height * 0.05)
     property int paddingBoard: Settings.numFields + 1
     property variant colNames: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
     property variant rowNames: ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26"]
@@ -32,6 +32,7 @@ Rectangle {
             spacing: 1
 
             Repeater {
+                id: repeater
                 model: engine.battlefield
                 delegate: Rectangle {
                     width: canvas.fieldSize
@@ -54,8 +55,7 @@ Rectangle {
 
         Repeater {
             model: Settings.numFields
-
-            Rectangle {
+            delegate: Rectangle {
                 width: canvas.fieldSize
                 height: canvas.fieldSize
 
@@ -75,8 +75,7 @@ Rectangle {
 
         Repeater {
             model: Settings.numFields
-
-            Rectangle {
+            delegate: Rectangle {
                 width: canvas.fieldSize
                 height: canvas.fieldSize
 
@@ -88,13 +87,25 @@ Rectangle {
         }
     }
 
-    Button {
-        id: testButton
-        anchors.left: boardfields.right
-        anchors.bottom: boardfields.top
-        text: qsTr("Test Signal")
-        onClicked: {
-            engine.battlefield.setField(0, 0, 0);
+    ColumnLayout {
+        id: fieldButtons
+        anchors.left: canvas.right
+        anchors.top: canvas.top
+
+        Button {
+            id: testButton
+            text: qsTr("Test Signal")
+            onClicked: {
+                engine.battlefield.setField(0, 0, 0);
+            }
+        }
+
+        Button {
+            id: randomButton
+            text: qsTr("Place ships")
+            onClicked: {
+                engine.placeShipsRandom();
+            }
         }
     }
 }

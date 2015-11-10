@@ -58,7 +58,8 @@ Rectangle {
             anchors.top: joinGameButton.bottom
             anchors.topMargin: buttonsMargin
             onClicked: {
-                console.log("Options button pressed: NumFields = " + Settings.numFields + ", ShipPoints: " + Settings.shipPoints);
+                mainMenu.visible = false;
+                options.visible = true;
             }
         }
 

@@ -22,6 +22,10 @@ ApplicationWindow {
     height: 400
     title: qsTr("QtBattleship")
 
+    onClosing: {
+        Settings.save();
+    }
+
     MainMenu {
         id: mainMenu
         visible: true
@@ -36,6 +40,12 @@ ApplicationWindow {
 
     JoinGame {
         id: joinGame
+        visible: false
+        anchors.fill: parent
+    }
+
+    Options {
+        id: options
         visible: false
         anchors.fill: parent
     }

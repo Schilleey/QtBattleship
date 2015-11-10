@@ -3,6 +3,8 @@
 
 #include "fielddata.h"
 #include "fieldview.h"
+#include "settings.h"
+#include "battlefield.h"
 
 
 FieldView::FieldView(QQuickItem *parent)
@@ -13,11 +15,11 @@ FieldView::FieldView(QQuickItem *parent)
 
 void FieldView::paint(QPainter *painter)
 {
-//    qDebug() << "Draw field" << _color;
-
     const FieldData& fielddata = _data.value<FieldData>();
 
-    QColor color(fielddata.color());
+    QString fieldColor = fielddata.color();
+    fieldColor = (fieldColor.isEmpty()) ? Settings::instance()->boardColor() : fieldColor;
+    QColor color(fieldColor);
     QBrush brush(color);
 
     painter->fillRect(boundingRect(), brush);

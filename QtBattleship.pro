@@ -27,6 +27,7 @@ OTHER_FILES += \
     src/qml/NewGame.qml \
     src/qml/JoinGame.qml \
     src/qml/BattleField.qml \
+    src/qml/Options.qml \
     src/qml/UILogic.js \
     src/qml/components/GuiControls/NumberInput.qml
 

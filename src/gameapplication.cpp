@@ -31,6 +31,9 @@ bool GameApplication::showQmlWindow()
         return false;
     }
 
+    // Load settings
+    Settings::instance()->load();
+
     GameEngine* engine = new GameEngine(this);
     qmlcontext->setContextProperty("engine", engine); // Global 'engine' object to access in Qml
 

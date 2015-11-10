@@ -136,6 +136,7 @@ Rectangle {
                    newGame.visible = false;
 
                    engine.battlefield.initialize();
+                   engine.placeShipsRandom();
                    UILogic.createBattleField("playerboard");
                }
            }

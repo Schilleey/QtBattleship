@@ -4,22 +4,27 @@
 #include <QMetaType>
 #include <QString>
 
+class BattleField;
+
 
 class FieldData
 {
 public:
     FieldData();
+    FieldData(int modelPosition);
 
     enum ImageType
     {
         None,
-        BattleShip
+        BattleShip,
+        typeSize // Last element is size of enum
     };
 
     enum ImageOrientation
     {
         Horizontal,
-        Vertical
+        Vertical,
+        orientationSize
     };
 
     int type() const;
@@ -34,13 +39,21 @@ public:
     int orientation() const;
     void setOrientation(int orientation);
 
+    int modelPosition() const;
+
     void setData(int type, int part, int orientation);
+    int getShipSize(ImageType type);
+    bool isEmpty();
+    void clear();
 
 private:
     int _type;
     QString _color;
     int _part;
     int _orientation;
+    int _modelPosition;
+
+    const int shipLength[typeSize] = {0, 3};
 };
 
 Q_DECLARE_METATYPE(FieldData)

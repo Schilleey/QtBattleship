@@ -26,8 +26,10 @@ public:
 
     BattleField* battlefield() const;
 
+    Q_INVOKABLE void placeShipsRandom();
+
 signals:
-    battleFieldChanged(BattleField* battlefield);
+    void battleFieldChanged(BattleField* battlefield);
 
 private:
     BattleField* _battlefield;
