@@ -28,6 +28,7 @@ public:
     Q_INVOKABLE void initialize();
     Q_INVOKABLE void setField(int row, int column, int data);
     Q_INVOKABLE bool setShip(int row, int column, FieldData::ImageType type, FieldData::ImageOrientation orientation);
+    Q_INVOKABLE bool setShip(int position, FieldData::ImageType type, FieldData::ImageOrientation orientation);
     Q_INVOKABLE void clear();
 
     int rowCount(const QModelIndex &parent) const override;

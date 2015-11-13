@@ -17,6 +17,9 @@ public:
     {
         None,
         BattleShip,
+        Cruiser,
+        Destroyer,
+        Submarine,
         typeSize // Last element is size of enum
     };
 
@@ -42,7 +45,6 @@ public:
     int modelPosition() const;
 
     void setData(int type, int part, int orientation);
-    int getShipSize(ImageType type);
     bool isEmpty();
     void clear();
 
@@ -52,8 +54,6 @@ private:
     int _part;
     int _orientation;
     int _modelPosition;
-
-    const int shipLength[typeSize] = {0, 3};
 };
 
 Q_DECLARE_METATYPE(FieldData)

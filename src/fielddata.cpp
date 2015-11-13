@@ -65,11 +65,6 @@ void FieldData::setData(int type, int part, int orientation)
     setOrientation(orientation);
 }
 
-int FieldData::getShipSize(FieldData::ImageType type)
-{
-    return shipLength[type];
-}
-
 bool FieldData::isEmpty()
 {
     return _type == None;

@@ -62,6 +62,9 @@ void FieldView::setData(const QVariant &data)
             break;
         }
     case FieldData::BattleShip:
+    case FieldData::Cruiser:
+    case FieldData::Destroyer:
+    case FieldData::Submarine:
         {
             const QString imagePath = QString(":/images/resources/BattleShip_%1.svg").arg(fielddata.part());
             _svgRenderer.load(imagePath);

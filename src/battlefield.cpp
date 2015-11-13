@@ -1,6 +1,8 @@
 #include "battlefield.h"
+#include "config.h"
 #include "settings.h"
 
+#include <QRect>
 #include <QColor>
 #include <QDebug>
 
@@ -32,64 +34,67 @@ void BattleField::setField(int row, int column, int data)
 
 bool BattleField::setShip(int row, int column, FieldData::ImageType type, FieldData::ImageOrientation orientation)
 {
-    int shipLength = 0;
-
-    switch(type)
-    {
-    case FieldData::BattleShip:
-        {
-            shipLength = 4;
-            break;
-        }
-    default:
-        break;
-    }
-
-    if(shipLength == 0)
+    if(type == FieldData::None)
         return false;
 
-    int xleft = (column == 0) ? column : (column - 1);
-    int ytop = (row == 0) ? row : (row - 1);
+    int shipLength = Config::lengthOfShip[type];
+
+    int xleft = column - 1;
+    int ytop = row - 1;
     int xright, ybottom;
 
     int size = Settings::instance()->numFields();
 
     if(orientation == FieldData::Horizontal) // Horizontal
     {
-        xright = ((xleft + shipLength + 1) == size) ? (xleft + shipLength) : (xleft + shipLength + 1);
-        ybottom = ((ytop + 2) == size) ? (ytop + 1) : (ytop + 2);
+        xright = xleft + shipLength + 1;
+        ybottom = ytop + 2;
     }
     else // Vertical
     {
-        xright = ((xleft + 2) == size) ? (xleft + 1) : (xleft + 2);
-        ybottom = ((ytop + shipLength + 1) == size) ? (ytop + shipLength) : (ytop + shipLength + 1);
+        xright = xleft + 2;
+        ybottom = ytop + shipLength + 1;
     }
 
+    // Check if ship is outside the board
+    if(xleft < -1 || ytop < -1 || xright > size || ybottom > size)
+        return false;
+
+    QRect boardRect(0, 0, size, size);
+    QRect shipRect(QPoint(xleft, ytop), QPoint(xright, ybottom));
+
+    // Get actual ship rectangle
+    QRect iRect = boardRect.intersected(shipRect);
+
     // Check if ship can be placed
-    if(!checkRectEmpty(xleft, ytop, xright, ybottom))
+    if(!checkRectEmpty(iRect.x(), iRect.y(), iRect.right(), iRect.bottom()))
         return false;
 
     // Place ship
     if(orientation == FieldData::Horizontal)
     {
-        getFieldData(row, column + 0)->setData(type, 1, orientation);
-        getFieldData(row, column + 1)->setData(type, 2, orientation);
-        getFieldData(row, column + 2)->setData(type, 2, orientation);
-        getFieldData(row, column + 3)->setData(type, 3, orientation);
+        for(int i = 0; i < shipLength; i++)
+            getFieldData(row, column + i)->setData(type, Config::imageOfShip(type, i), orientation);
 
         updateRect(row, column, row, column + shipLength - 1);
     }
     else
     {
-        getFieldData(row + 0, column)->setData(type, 1, orientation);
-        getFieldData(row + 1, column)->setData(type, 2, orientation);
-        getFieldData(row + 2, column)->setData(type, 2, orientation);
-        getFieldData(row + 3, column)->setData(type, 3, orientation);
+        for(int i = 0; i < shipLength; i++)
+            getFieldData(row + i, column)->setData(type, Config::imageOfShip(type, i), orientation);
 
         updateRect(row, column, row + shipLength - 1, column);
     }
 
     return true;
+}
+
+bool BattleField::setShip(int position, FieldData::ImageType type, FieldData::ImageOrientation orientation)
+{
+    int row = indexToRow(position);
+    int column = indexToColumn(position);
+
+    return setShip(row, column, type, orientation);
 }
 
 void BattleField::clear()
@@ -147,7 +152,8 @@ void BattleField::updateRect(const int xleft, const int ytop, const int xright, 
 
 int BattleField::indexToRow(const int index) const
 {
-    return floor(index / Settings::instance()->numFields());
+    int size = Settings::instance()->numFields();
+    return int(floor(index / size)) % size;
 }
 
 int BattleField::indexToColumn(const int index) const

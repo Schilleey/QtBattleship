@@ -26,7 +26,7 @@ public:
 
     BattleField* battlefield() const;
 
-    Q_INVOKABLE void placeShipsRandom();
+    Q_INVOKABLE bool placeShipsRandom();
 
 signals:
     void battleFieldChanged(BattleField* battlefield);
