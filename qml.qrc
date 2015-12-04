@@ -8,9 +8,6 @@
         <file>src/qml/components/GuiControls/qmldir</file>
         <file>src/qml/BattleField.qml</file>
         <file>src/qml/UILogic.js</file>
-        <file>resources/BattleShip_1.png</file>
-        <file>resources/BattleShip_2.png</file>
-        <file>resources/BattleShip_3.png</file>
         <file>src/qml/Options.qml</file>
     </qresource>
     <qresource prefix="/images">
