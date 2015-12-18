@@ -10,7 +10,7 @@ class FieldView : public QQuickPaintedItem
 {
     Q_OBJECT
 
-    Q_PROPERTY(QVariant data READ data WRITE setData NOTIFY dataChanged)
+    Q_PROPERTY(QVariant data READ data WRITE setData)
 
 public:
     FieldView(QQuickItem* parent = nullptr);
@@ -19,9 +19,6 @@ public:
 
     QVariant data() const;
     void setData(const QVariant& data);
-
-signals:
-    void dataChanged(QVariant data);
 
 private:
     QVariant _data;

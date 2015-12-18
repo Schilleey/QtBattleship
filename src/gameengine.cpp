@@ -1,3 +1,4 @@
+#include <QCoreApplication>
 #include <QTime>
 #include <QDebug>
 
@@ -8,23 +9,84 @@
 
 
 GameEngine::GameEngine(QObject *parent)
-    : QObject(parent), _battlefield(nullptr)
+    : QObject(parent),
+      _playerField(nullptr),
+      _opponentField(nullptr),
+      _isRunning(false),
+      _isPlayersTurn(true)
 {
-    if(!_battlefield)
-        _battlefield = new BattleField(this);
+    if(!_playerField)
+        _playerField = new BattleField(playerFieldName(), this);
+
+    if(!_opponentField)
+        _opponentField = new BattleField(opponentFieldName(), this);
 }
 
-BattleField *GameEngine::battlefield() const
+int GameEngine::simpleAI() const
 {
-    return _battlefield;
+    QTime time = QTime::currentTime();
+    qsrand((uint)time.msec());
+
+    int numFields = Settings::instance()->numFields();
+    int numAllFields = numFields * numFields;
+
+    return qrand()%numAllFields;
 }
 
-bool GameEngine::placeShipsRandom()
+void GameEngine::delay(int millisecondsToWait)
 {
-    if(!_battlefield)
+    QTime dieTime = QTime::currentTime().addMSecs( millisecondsToWait );
+    while( QTime::currentTime() < dieTime )
+    {
+        QCoreApplication::processEvents( QEventLoop::AllEvents, 100 );
+    }
+}
+
+BattleField *GameEngine::playerField() const
+{
+    return _playerField;
+}
+
+QString GameEngine::playerFieldName() const
+{
+    return Config::playerFieldName;
+}
+
+BattleField *GameEngine::opponentField() const
+{
+    return _opponentField;
+}
+
+QString GameEngine::opponentFieldName() const
+{
+    return Config::opponentFieldName;
+}
+
+QString GameEngine::gameInformation() const
+{
+    return _gameInformation;
+}
+
+void GameEngine::setGameInformation(const QString &gameInformation)
+{
+    _gameInformation = gameInformation;
+
+    emit gameInformationChanged(_gameInformation);
+}
+
+bool GameEngine::placeShipsRandom(QString battleFieldName)
+{    
+    BattleField* field = nullptr;
+
+    if(battleFieldName == playerFieldName())
+        field = playerField();
+    else if(battleFieldName == opponentFieldName())
+        field = opponentField();
+
+    if(!field)
         return false;
 
-    _battlefield->clear();
+    field->clear();
 
     int numFields = Settings::instance()->numFields();
     int numAllFields = numFields*numFields;
@@ -46,10 +108,10 @@ bool GameEngine::placeShipsRandom()
             {
                 if(loops++ < 30) // Try to place ship random
                 {
-                    ok = _battlefield->setShip(qrand()%numFields,
-                                               qrand()%numFields,
-                                               static_cast<FieldData::ImageType>(ship),
-                                               static_cast<FieldData::ImageOrientation>(qrand()%FieldData::orientationSize));
+                    ok = field->setShip(qrand()%numFields,
+                                        qrand()%numFields,
+                                        static_cast<FieldData::ImageType>(ship),
+                                        static_cast<FieldData::ImageOrientation>(qrand()%FieldData::orientationSize));
                 }
                 else // If this takes more than 30 tries, go through every field and try again
                 {
@@ -58,9 +120,9 @@ bool GameEngine::placeShipsRandom()
                     {
                         for(int pos = startPos; pos < (numAllFields + startPos); pos++)
                         {
-                            ok = _battlefield->setShip(pos,
-                                                       static_cast<FieldData::ImageType>(ship),
-                                                       static_cast<FieldData::ImageOrientation>(ori));
+                            ok = field->setShip(pos,
+                                                static_cast<FieldData::ImageType>(ship),
+                                                static_cast<FieldData::ImageOrientation>(ori));
 
                             if(ok) break;
                         }
@@ -74,5 +136,84 @@ bool GameEngine::placeShipsRandom()
     }
 
     return true;
+}
+
+void GameEngine::start()
+{
+    setIsRunning(true);
+
+    qDebug() << "Game started.";
+
+    setGameInformation("Game started, your turn");
+}
+
+void GameEngine::stop()
+{
+    setIsRunning(false);
+
+    qDebug() << "Game stoped.";
+}
+
+bool GameEngine::processTurn(int position)
+{
+    if(!isRunning())
+        return true;
+
+    BattleField* activeField;
+    if(isPlayersTurn())
+        activeField = opponentField();
+    else
+        activeField = playerField();
+
+    bool hit = !activeField->fieldIsEmpty(position);
+    bool ok = activeField->setFieldHit(position, hit);
+
+    if(!ok)
+        return false;
+
+    int shipsLeft = activeField->numberOfShips();
+    if(shipsLeft == 0)
+    {
+        setGameInformation("Game over!");
+        delay(1000);
+        stop();
+    }
+
+    _isPlayersTurn = !_isPlayersTurn;
+
+    if(isPlayersTurn())
+    {
+        setGameInformation("Your turn!");
+    }
+    else
+    {
+        setGameInformation("Opponents turn!");
+        delay(3000);
+        bool aiok = processTurn(simpleAI());
+
+        if(!aiok)
+        {
+            // TODO: try again but without random dead lock
+        }
+    }
+
+    return true;
+}
+
+bool GameEngine::isRunning() const
+{
+    return _isRunning;
+}
+
+void GameEngine::setIsRunning(bool isRunning)
+{
+    _isRunning = isRunning;
+
+    emit isRunningChanged(_isRunning);
+}
+
+bool GameEngine::isPlayersTurn() const
+{
+    return _isPlayersTurn;
 }
 

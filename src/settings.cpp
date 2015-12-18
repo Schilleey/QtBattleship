@@ -30,7 +30,6 @@ void Settings::save()
 {
     setValue("numFields", QVariant(_numFields));
     setValue("fieldSize", QVariant(_fieldSize));
-    setValue("shipPoints", QVariant(_shipPoints));
     setValue("boardColor", QVariant(_boardColor));
 
     qDebug() << "Settings saved.";
@@ -40,7 +39,6 @@ void Settings::load()
 {
     _numFields = value("numFields", QVariant(16)).toInt();
     _fieldSize = value("fieldSize", QVariant(20)).toInt();
-    _shipPoints = value("shipPoints", QVariant(32)).toInt();
     _boardColor = value("boardColor", QVariant("white")).toString();
 }
 
@@ -53,17 +51,6 @@ void Settings::setNumFields(int numFields)
 {
     _numFields = numFields;
     emit numFieldsChanged(_numFields);
-}
-
-int Settings::shipPoints() const
-{
-    return _shipPoints;
-}
-
-void Settings::setShipPoints(int shipPoints)
-{
-    _shipPoints = shipPoints;
-    emit shipPointsChanged(_shipPoints);
 }
 
 int Settings::fieldSize() const

@@ -21,22 +21,6 @@ Rectangle {
 
         }
 
-        RowLayout {
-           id: gameTypeRowLayout
-
-           anchors.horizontalCenter: parent.horizontalCenter
-           ExclusiveGroup { id: gameType }
-           RadioButton {
-               text: qsTr("Singleplayer")
-               checked: true
-               exclusiveGroup: gameType
-           }
-           RadioButton {
-               text: qsTr("Multiplayer")
-               exclusiveGroup: gameType
-           }
-       }
-
        CheckBox {
            id: classicCheckbox
            anchors.horizontalCenter: parent.horizontalCenter
@@ -46,15 +30,11 @@ Rectangle {
        RowLayout {
            id: fieldSizeRowLayout
            anchors.horizontalCenter: parent.horizontalCenter
+           visible: !classicCheckbox.checked
 
            Text {
                text: qsTr("Battlefield size")
            }
-//           TextInput {
-//               width: 30
-//               validator: IntValidator {bottom: 8; top: 26;}
-//               text: "16" //TODO: set with c++
-//           }
 
            NumberInput {
                property string text: "16"
@@ -81,63 +61,28 @@ Rectangle {
        }
 
        RowLayout {
-           id: shipPointsRowLayout
-           anchors.horizontalCenter: parent.horizontalCenter
-
-           Text {
-            text: qsTr("Shippoints")
-           }
-
-//           TextInput {
-//               width: 30
-//               validator: IntValidator {bottom: 16; top: 52;}
-//               text: "32" //TODO: set with c++
-//           }
-
-           NumberInput {
-               property string text: "32"
-
-               id: numberInputPoints
-               width: 40
-               height: 22
-
-               minValue: 16
-               maxValue: 52
-               defaultIncrement: 1
-
-               textInput.text: text
-
-               // Must use this signal to unbreak text link
-               onQuickUpdate: text = quickValue
-
-               onEditingFinished: {
-                   //User pressed enter or input focus was lost
-                   text = textInput.text
-               }
-           }
-
-       }
-
-       Button {
-           id: advancedOptionsButton
-           anchors.horizontalCenter: parent.horizontalCenter
-           text: qsTr("Advanced options")
-       }
-
-       RowLayout {
            anchors.horizontalCenter: parent.horizontalCenter
            Button {
                id: createNewGameButton
                text: qsTr("Create game")
                onClicked: {
-                   Settings.numFields = numberInputBFSize.text;
-                   Settings.shipPoints = numberInputPoints.text;
+                   if(classicCheckbox.checked)
+                       Settings.numFields = 10;
+                   else
+                       Settings.numFields = numberInputBFSize.text;
 
                    newGame.visible = false;
 
-                   engine.battlefield.initialize();
-                   engine.placeShipsRandom();
-                   UILogic.createBattleField("playerboard");
+                   engine.playerField.initialize();
+                   engine.placeShipsRandom(engine.playerFieldName());
+                   UILogic.createBattleField("playerboard", playerBoardRect, true);
+
+                   engine.opponentField.initialize();
+                   engine.placeShipsRandom(engine.opponentFieldName());
+                   engine.opponentField.hideImages(true);
+                   UILogic.createBattleField("opponentboard", opponentBoardRect, false);
+
+                   boardLayout.visible = true;
                }
            }
            Button {

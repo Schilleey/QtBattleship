@@ -1,21 +1,25 @@
 import QtQuick 2.0
+import QtQuick.Window 2.2
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.2
+import QtQuick.Dialogs 1.2
 
 import QtBattleship 1.0
 
+import "UILogic.js" as UILogic
+
 
 Rectangle {
-    property int fieldSize: Settings.fieldSize = (mainWindow.height * 0.05)
     property int paddingBoard: Settings.numFields + 1
+    property int fieldSize: Settings.fieldSize = UILogic.calculateFieldSize(parent.width, paddingBoard, Screen.width, Screen.height)
     property variant colNames: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
     property variant rowNames: ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26"]
+    property bool isPlayer
+    property variant battlefield: isPlayer ? engine.playerField : engine.opponentField
 
     id: canvas
-    x: 0
-    y: 0
-    width: (Settings.numFields + 1) * fieldSize + paddingBoard
-    height: (Settings.numFields + 1) * fieldSize + paddingBoard
+    width: fieldSize * paddingBoard + paddingBoard
+    height: width
 
     Rectangle {
         id: boardfields
@@ -33,7 +37,7 @@ Rectangle {
 
             Repeater {
                 id: repeater
-                model: engine.battlefield
+                model: canvas.battlefield
                 delegate: Rectangle {
                     width: canvas.fieldSize
                     height: canvas.fieldSize
@@ -41,6 +45,27 @@ Rectangle {
                     FieldView {
                         anchors.fill: parent
                         data: display
+                    }
+
+                    MouseArea {
+                        id: mouseSquareArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        acceptedButtons: Qt.LeftButton
+                        enabled: !canvas.isPlayer
+
+                        onClicked: {
+                            if(!engine.isRunning)
+                                return;
+
+                            if(!engine.isPlayersTurn)
+                                return;
+
+                            var ok = engine.processTurn(index);
+
+                            if(!ok)
+                                tryAgainDialog.open();
+                        }
                     }
                 }
             }
@@ -87,26 +112,67 @@ Rectangle {
         }
     }
 
-    ColumnLayout {
+    RowLayout {
         id: fieldButtons
-        anchors.left: canvas.right
-        anchors.top: canvas.top
-
-        Button {
-            id: testButton
-            text: qsTr("Test Signal")
-            onClicked: {
-                engine.battlefield.setField(0, 0, 0);
-            }
-        }
+        anchors.left: canvas.left
+        anchors.top: canvas.bottom
+        anchors.topMargin: 5
+        spacing: 5
 
         Button {
             id: randomButton
             text: qsTr("Place ships")
+            visible: canvas.isPlayer
+            enabled: !engine.isRunning
             onClicked: {
-                engine.placeShipsRandom();
+                engine.placeShipsRandom(engine.playerFieldName());
             }
         }
+
+        Button {
+            id: startButton
+            text: qsTr("Start game")
+            visible: canvas.isPlayer
+            enabled: !engine.isRunning
+            onClicked: {
+                engine.start();
+            }
+        }
+    }
+
+    ColumnLayout {
+        id: gameInformations
+        visible: canvas.isPlayer
+        anchors.left: canvas.left
+        anchors.top: fieldButtons.bottom
+        anchors.topMargin: 5
+        spacing: 5
+
+        Label {
+            font.pixelSize: 12
+            color: "steelblue"
+            text: "Ships left: Player " + engine.playerField.numberOfShips
+                        + ", Opponent " + engine.opponentField.numberOfShips
+        }
+
+        Label {
+            font.pixelSize: 14
+            color: "steelblue"
+            text: engine.gameInformation
+        }
+    }
+
+    MessageDialog {
+        id: tryAgainDialog
+        title: "Warning"
+        text: "This position has been tried already! Your turn again!"
+        icon: StandardIcon.Warning
+        standardButtons: StandardButton.Ok
+        onAccepted: {
+            tryAgainDialog.close();
+        }
+
+        Component.onCompleted: visible = false
     }
 }
 

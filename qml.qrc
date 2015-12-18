@@ -3,7 +3,6 @@
         <file>src/qml/main.qml</file>
         <file>src/qml/MainMenu.qml</file>
         <file>src/qml/NewGame.qml</file>
-        <file>src/qml/JoinGame.qml</file>
         <file>src/qml/components/GuiControls/NumberInput.qml</file>
         <file>src/qml/components/GuiControls/qmldir</file>
         <file>src/qml/BattleField.qml</file>

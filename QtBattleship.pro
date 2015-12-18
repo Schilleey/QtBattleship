@@ -27,7 +27,6 @@ OTHER_FILES += \
     src/qml/main.qml \
     src/qml/MainMenu.qml \
     src/qml/NewGame.qml \
-    src/qml/JoinGame.qml \
     src/qml/BattleField.qml \
     src/qml/Options.qml \
     src/qml/UILogic.js \

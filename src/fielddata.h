@@ -42,18 +42,30 @@ public:
     int orientation() const;
     void setOrientation(int orientation);
 
+    bool hideImage() const;
+    void setHideImage(bool hideImage);
+
     int modelPosition() const;
 
-    void setData(int type, int part, int orientation);
+    void setData(int type, int part, int orientation, int shipId);
     bool isEmpty();
     void clear();
 
+    int shipId() const;
+    void setShipId(int shipId);
+
+    bool isHit() const;
+    void setIsHit(bool isHit);
+
 private:
     int _type;
+    int _shipId;
     QString _color;
     int _part;
     int _orientation;
     int _modelPosition;
+    bool _hideImage;
+    bool _isHit;
 };
 
 Q_DECLARE_METATYPE(FieldData)

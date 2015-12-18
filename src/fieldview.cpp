@@ -24,7 +24,7 @@ void FieldView::paint(QPainter *painter)
 
     painter->fillRect(boundingRect(), brush);
 
-    if(fielddata.type() != FieldData::None)
+    if(fielddata.type() != FieldData::None && !fielddata.hideImage())
     {
         if(_svgRenderer.isValid())
         {

@@ -53,16 +53,47 @@ void FieldData::setOrientation(int orientation)
     _orientation = orientation;
 }
 
+bool FieldData::hideImage() const
+{
+    return _hideImage;
+}
+
+void FieldData::setHideImage(bool hideImage)
+{
+    _hideImage = hideImage;
+}
+
+int FieldData::shipId() const
+{
+    return _shipId;
+}
+
+void FieldData::setShipId(int shipId)
+{
+    _shipId = shipId;
+}
+
+bool FieldData::isHit() const
+{
+    return _isHit;
+}
+
+void FieldData::setIsHit(bool isHit)
+{
+    _isHit = isHit;
+}
+
 int FieldData::modelPosition() const
 {
     return _modelPosition;
 }
 
-void FieldData::setData(int type, int part, int orientation)
+void FieldData::setData(int type, int part, int orientation, int shipId)
 {
     setType(type);
     setPart(part);
     setOrientation(orientation);
+    setShipId(shipId);
 }
 
 bool FieldData::isEmpty()
@@ -73,7 +104,10 @@ bool FieldData::isEmpty()
 void FieldData::clear()
 {
     _type = 0;
+    _shipId = -1;
     _color = "";
     _part = 0;
     _orientation = 0;
+    _hideImage = false;
+    _isHit = false;
 }
