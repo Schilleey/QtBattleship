@@ -17,5 +17,7 @@
         <file>resources/BattleShip_1.svg</file>
         <file>resources/BattleShip_2.svg</file>
         <file>resources/BattleShip_3.svg</file>
+        <file>resources/GameBackground.jpg</file>
+        <file>resources/ShipAnim.svg</file>
     </qresource>
 </RCC>

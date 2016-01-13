@@ -5,23 +5,26 @@ import QtBattleship 1.0
 
 Rectangle {
     id: mainMenuContainer
+    anchors.fill: parent
     property int buttonsMargin: 10
     property int buttonsHeight: 23
     property real buttonsWidthPercentage: 0.5
 
-    Text {
-        id: gameName
-        text: "QtBattleship"
-        anchors.horizontalCenter: parent.horizontalCenter
+    Image {
+        anchors.fill: parent
+        source: "qrc:/images/resources/GameBackground.jpg"
     }
 
-    Rectangle {
-        border.color: "black";
-        anchors.top: gameName.bottom
+    Column {
+        spacing: 10
         anchors.horizontalCenter: parent.horizontalCenter
 
-        width: newGameButton.width + 15
-        height: 2 * buttonsHeight + 3 * buttonsMargin
+        Text {
+            id: gameNameText
+            font.pixelSize: 14
+            text: qsTr("QtBattleship")
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
 
         Button {
             id: newGameButton
@@ -29,8 +32,6 @@ Rectangle {
             width: mainMenuContainer.width * buttonsWidthPercentage
             height: buttonsHeight
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            anchors.topMargin: buttonsMargin
             onClicked: {
                 mainMenu.visible = false;
                 newGame.visible = true;
@@ -43,14 +44,11 @@ Rectangle {
             width: mainMenuContainer.width * buttonsWidthPercentage
             height: buttonsHeight
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: newGameButton.bottom
-            anchors.topMargin: buttonsMargin
             onClicked: {
                 mainMenu.visible = false;
                 options.visible = true;
             }
         }
-
     }
 }
 

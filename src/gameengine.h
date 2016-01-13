@@ -13,6 +13,7 @@
 #include <QObject>
 
 #include "battlefield.h"
+#include "ai.h"
 
 
 class GameEngine : public QObject
@@ -31,7 +32,6 @@ public:
     BattleField* playerField() const;
     BattleField* opponentField() const;
 
-    int simpleAI() const;
     void delay(int millisecondsToWait);
 
     Q_INVOKABLE QString playerFieldName() const;
@@ -40,7 +40,8 @@ public:
     Q_INVOKABLE bool placeShipsRandom(QString battleFieldName);
 
     Q_INVOKABLE void start();
-    Q_INVOKABLE void stop();
+    Q_INVOKABLE void stop(bool showText = false);
+    Q_INVOKABLE void reset();
     Q_INVOKABLE bool processTurn(int position);
 
     bool isRunning() const;
@@ -60,9 +61,11 @@ signals:
 private:
     BattleField* _playerField;
     BattleField* _opponentField;
+    AI* _ai;
     bool _isRunning;
     bool _isPlayersTurn;
     QString _gameInformation;
+    int _computerDelay;
 };
 
 #endif // GAMEENGINE_H

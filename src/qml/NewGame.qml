@@ -11,14 +11,22 @@ import "UILogic.js" as UILogic
 
 Rectangle {
     id: newGameContainer
+    anchors.fill: parent
+
+    Image {
+        anchors.fill: parent
+        source: "qrc:/images/resources/GameBackground.jpg"
+    }
+
     Column {
         spacing: 10
         anchors.horizontalCenter: parent.horizontalCenter
+
         Text {
             id: newGameText
+            font.pixelSize: 14
             text: qsTr("Create new game")
             anchors.horizontalCenter: parent.horizontalCenter
-
         }
 
        CheckBox {
@@ -72,6 +80,8 @@ Rectangle {
                        Settings.numFields = numberInputBFSize.text;
 
                    newGame.visible = false;
+                   shipAnimationImage.visible = false;
+                   shipAnimation.running = false;
 
                    engine.playerField.initialize();
                    engine.placeShipsRandom(engine.playerFieldName());

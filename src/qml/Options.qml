@@ -7,6 +7,12 @@ import QtBattleship 1.0
 
 Rectangle {
     id: optionsContainer
+    anchors.fill: parent
+
+    Image {
+        anchors.fill: parent
+        source: "qrc:/images/resources/GameBackground.jpg"
+    }
 
     Column {
         spacing: 10
@@ -14,6 +20,7 @@ Rectangle {
 
         Text {
             id: optionsText
+            font.pixelSize: 14
             text: qsTr("Options")
             anchors.horizontalCenter: parent.horizontalCenter
         }
@@ -28,7 +35,7 @@ Rectangle {
             ComboBox {
                 id: battlefieldColor
 
-                model: ["white", "black", "red", "yellow", "green", "cyan"]
+                model: ["white", "black", "yellow", "cyan"]
                 Component.onCompleted: {
                     currentIndex = battlefieldColor.find(Settings.boardColor);
                 }

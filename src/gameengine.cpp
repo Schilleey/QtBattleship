@@ -12,25 +12,19 @@ GameEngine::GameEngine(QObject *parent)
     : QObject(parent),
       _playerField(nullptr),
       _opponentField(nullptr),
+      _ai(nullptr),
       _isRunning(false),
-      _isPlayersTurn(true)
+      _isPlayersTurn(true),
+      _computerDelay(3000)
 {
     if(!_playerField)
         _playerField = new BattleField(playerFieldName(), this);
 
     if(!_opponentField)
         _opponentField = new BattleField(opponentFieldName(), this);
-}
 
-int GameEngine::simpleAI() const
-{
-    QTime time = QTime::currentTime();
-    qsrand((uint)time.msec());
-
-    int numFields = Settings::instance()->numFields();
-    int numAllFields = numFields * numFields;
-
-    return qrand()%numAllFields;
+    if(!_ai)
+        _ai = new AI(this, _playerField);
 }
 
 void GameEngine::delay(int millisecondsToWait)
@@ -72,6 +66,20 @@ void GameEngine::setGameInformation(const QString &gameInformation)
     _gameInformation = gameInformation;
 
     emit gameInformationChanged(_gameInformation);
+}
+
+void GameEngine::reset()
+{
+    if(isRunning())
+    {
+        qDebug() << "Cant reset game while running!";
+        return;
+    }
+
+    playerField()->clear();
+    opponentField()->clear();
+    _ai->setLastHit(false);
+    _isPlayersTurn = true;
 }
 
 bool GameEngine::placeShipsRandom(QString battleFieldName)
@@ -144,12 +152,17 @@ void GameEngine::start()
 
     qDebug() << "Game started.";
 
+    _isPlayersTurn = true;
+
     setGameInformation("Game started, your turn");
 }
 
-void GameEngine::stop()
+void GameEngine::stop(bool showText)
 {
     setIsRunning(false);
+
+    if(showText)
+        setGameInformation("Game stopped.");
 
     qDebug() << "Game stoped.";
 }
@@ -168,6 +181,9 @@ bool GameEngine::processTurn(int position)
     bool hit = !activeField->fieldIsEmpty(position);
     bool ok = activeField->setFieldHit(position, hit);
 
+    if(!isPlayersTurn() && ok)
+        _ai->setLastHit(hit);
+
     if(!ok)
         return false;
 
@@ -177,6 +193,7 @@ bool GameEngine::processTurn(int position)
         setGameInformation("Game over!");
         delay(1000);
         stop();
+        return true;
     }
 
     _isPlayersTurn = !_isPlayersTurn;
@@ -188,13 +205,25 @@ bool GameEngine::processTurn(int position)
     else
     {
         setGameInformation("Opponents turn!");
-        delay(3000);
-        bool aiok = processTurn(simpleAI());
+        delay(_computerDelay);
 
-        if(!aiok)
+        int pos;
+        bool aiok;
+
+        do
         {
-            // TODO: try again but without random dead lock
-        }
+            pos = _ai->simpleMemory();
+
+            if(pos < 0)
+            {
+                _isPlayersTurn = !_isPlayersTurn;
+                setGameInformation("Ups something went wrong, your turn!");
+                break;
+            }
+
+            aiok = processTurn(pos);
+
+        }while(!aiok);
     }
 
     return true;

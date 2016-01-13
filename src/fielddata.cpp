@@ -83,15 +83,41 @@ void FieldData::setIsHit(bool isHit)
     _isHit = isHit;
 }
 
+bool FieldData::isTried() const
+{
+    return _isTried;
+}
+
+void FieldData::setIsTried(bool isTried)
+{
+    _isTried = isTried;
+}
+
+int FieldData::partNumber() const
+{
+    return _partNumber;
+}
+
+void FieldData::setPartNumber(int partNumber)
+{
+    _partNumber = partNumber;
+}
+
+void FieldData::reset()
+{
+    clear();
+}
+
 int FieldData::modelPosition() const
 {
     return _modelPosition;
 }
 
-void FieldData::setData(int type, int part, int orientation, int shipId)
+void FieldData::setData(int type, int part, int partNumber, int orientation, int shipId)
 {
     setType(type);
     setPart(part);
+    setPartNumber(partNumber);
     setOrientation(orientation);
     setShipId(shipId);
 }
@@ -107,7 +133,9 @@ void FieldData::clear()
     _shipId = -1;
     _color = "";
     _part = 0;
+    _partNumber = -1;
     _orientation = 0;
     _hideImage = false;
     _isHit = false;
+    _isTried = false;
 }

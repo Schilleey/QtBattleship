@@ -10,7 +10,8 @@ SOURCES += src/main.cpp \
     src/gameengine.cpp \
     src/fielddata.cpp \
     src/fieldview.cpp \
-    src/config.cpp
+    src/config.cpp \
+    src/ai.cpp
 
 HEADERS += \
     src/settings.h \
@@ -19,7 +20,8 @@ HEADERS += \
     src/gameengine.h \
     src/fielddata.h \
     src/fieldview.h \
-    src/config.h
+    src/config.h \
+    src/ai.h
 
 RESOURCES += qml.qrc
 

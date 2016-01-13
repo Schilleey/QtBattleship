@@ -19,8 +19,8 @@ import QtBattleship 1.0
 ApplicationWindow {
     id: mainWindow
     visible: true
-    width: 600
-    height: 400
+    width: 640
+    height: 480
     title: qsTr("QtBattleship")
 
     onClosing: {
@@ -87,6 +87,24 @@ ApplicationWindow {
         id: options
         visible: false
         anchors.fill: parent
+    }
+
+    Image {
+        id: shipAnimationImage
+        visible: true
+        x: -width
+        y: 0.665 * mainWindow.height - height
+        source: "qrc:/images/resources/ShipAnim.svg"
+
+        SequentialAnimation {
+            id: shipAnimation
+            running: true
+            loops: Animation.Infinite
+            PropertyAnimation {id: panim1; target: shipAnimationImage; property: "x"; to: mainWindow.width; duration: 12000}
+            PropertyAnimation {id: panim2; target: shipAnimationImage; property: "mirror"; to: true; duration: 2000}
+            PropertyAnimation {id: panim3; target: shipAnimationImage; property: "x"; to: -shipAnimationImage.width; duration: 12000}
+            PropertyAnimation {id: panim4; target: shipAnimationImage; property: "mirror"; to: false; duration: 2000}
+        }
     }
 
 }

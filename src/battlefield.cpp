@@ -11,12 +11,19 @@ BattleField::BattleField(QString name, QObject *parent)
     : QAbstractListModel(parent),
       _name(name),
       _currentShipId(0),
-      _numberOfShips(0)
+      _numberOfShips(0),
+      _isInitialized(false)
 {
+    connect(Settings::instance(), SIGNAL(numFieldsChanged(int)), SLOT(updateModelSize(int)));
 }
 
 void BattleField::initialize()
 {
+    if(_isInitialized)
+        return;
+
+    _isInitialized = true;
+
     // Fill model with data
     int size = Settings::instance()->numFields();
     for(int i = 0; i < size*size; i++)
@@ -42,10 +49,11 @@ bool BattleField::setFieldHit(int position, bool hit)
     FieldData* fieldData = getFieldData(position);
     if(fieldData)
     {
-        if(fieldData->isHit())
+        if(fieldData->isTried())
             return false;
 
         fieldData->setIsHit(hit);
+        fieldData->setIsTried(true);
 
         if(hit)
         {
@@ -127,7 +135,7 @@ bool BattleField::setShip(int row, int column, FieldData::ImageType type, FieldD
         for(int i = 0; i < shipLength; i++)
         {
             field = getFieldData(row, column + i);
-            field->setData(type, Config::imageOfShip(type, i), orientation, _currentShipId);
+            field->setData(type, Config::imageOfShip(type, i), i, orientation, _currentShipId);
             _fieldsById[_currentShipId].push_back(field);
         }
 
@@ -139,7 +147,7 @@ bool BattleField::setShip(int row, int column, FieldData::ImageType type, FieldD
         for(int i = 0; i < shipLength; i++)
         {
             field = getFieldData(row + i, column);
-            field->setData(type, Config::imageOfShip(type, i), orientation, _currentShipId);
+            field->setData(type, Config::imageOfShip(type, i), i, orientation, _currentShipId);
             _fieldsById[_currentShipId].push_back(field);
         }
 
@@ -157,6 +165,41 @@ bool BattleField::setShip(int position, FieldData::ImageType type, FieldData::Im
     int column = indexToColumn(position);
 
     return setShip(row, column, type, orientation);
+}
+
+bool BattleField::removeShip(int row, int column)
+{
+    FieldData* data = getFieldData(row, column);
+    if(data)
+    {
+        FieldData::ImageOrientation orientation = (FieldData::ImageOrientation)data->orientation();
+        int shipId = data->shipId();
+        int shipLength = Config::lengthOfShip[data->type()];
+        int shipPart = data->partNumber();
+
+        QList<FieldData*> items = getFieldDataItemsById(shipId);
+        foreach(FieldData* item, items)
+        {
+            item->clear();
+        }
+
+        if(orientation == FieldData::Horizontal)
+            updateRect(row, column - shipPart, row, (column - shipPart) + shipLength - 1);
+        else
+            updateRect(row - shipPart, column, (row - shipPart) + shipLength - 1, column);
+
+        return true;
+    }
+
+    return false;
+}
+
+bool BattleField::removeShip(int position)
+{
+    int row = indexToRow(position);
+    int column = indexToColumn(position);
+
+    return removeShip(row, column);
 }
 
 bool BattleField::fieldIsEmpty(int position)
@@ -209,8 +252,14 @@ QVariant BattleField::data(const QModelIndex &index, int role) const
     if(!index.isValid())
         return QVariant::Invalid;
 
-    if(role == Qt::DisplayRole)
+    if(role == FieldDataRole)
         return QVariant::fromValue(*_model[indexToRow(index.row()) * Settings::instance()->numFields() + indexToColumn(index.row())]);
+    else if(role == TriedRole)
+        return QVariant::fromValue(_model[indexToRow(index.row()) * Settings::instance()->numFields() + indexToColumn(index.row())]->isTried());
+    else if(role == SizeRole)
+        return QVariant::fromValue(shipSizeAtIndex(index.row()));
+    else if(role == OrientationRole)
+        return QVariant::fromValue(_model[indexToRow(index.row()) * Settings::instance()->numFields() + indexToColumn(index.row())]->orientation());
 
     return QVariant::Invalid;
 }
@@ -218,6 +267,16 @@ QVariant BattleField::data(const QModelIndex &index, int role) const
 int BattleField::numberOfShips() const
 {
     return _numberOfShips;
+}
+
+QHash<int, QByteArray> BattleField::roleNames() const
+{
+    QHash<int, QByteArray> roles;
+        roles[FieldDataRole] = "fielddata";
+        roles[TriedRole] = "tried";
+        roles[SizeRole] = "shipSize";
+        roles[OrientationRole] = "shipOrientation";
+    return roles;
 }
 
 void BattleField::updateField(const int row, const int column)
@@ -246,6 +305,20 @@ void BattleField::updateRect(const int xleft, const int ytop, const int xright, 
     emit dataChanged(createIndex(topLeft, 0), createIndex(bottomRight, 0));
 }
 
+void BattleField::updateModelSize(const int numFields)
+{
+    if(!_isInitialized)
+        return;
+
+    int currentSize = _model.size();
+    if(currentSize == (numFields*numFields))
+        return;
+
+    _model.clear();
+
+    _isInitialized = false;
+}
+
 int BattleField::indexToRow(const int index) const
 {
     int size = Settings::instance()->numFields();
@@ -255,6 +328,89 @@ int BattleField::indexToRow(const int index) const
 int BattleField::indexToColumn(const int index) const
 {
     return index % Settings::instance()->numFields();
+}
+
+bool BattleField::moveShip(const int oldIndex, const int newIndex)
+{
+    // Get ship information
+    FieldData* data = getFieldData(oldIndex);
+    if(!data)
+        return false;
+
+    FieldData::ImageType shipType = (FieldData::ImageType)data->type();
+    FieldData::ImageOrientation shipOri = (FieldData::ImageOrientation)data->orientation();
+    int partNumber = data->partNumber();
+
+    // Remove ship
+    bool remove = removeShip(oldIndex);
+    if(!remove)
+        return false;
+
+    // Place ship at new location
+    bool place = setShip(newIndex, shipType, shipOri);
+    if(!place)
+    {
+        // If this fails, put old ship back
+        if(shipOri == FieldData::Horizontal)
+            setShip(oldIndex - partNumber, shipType, shipOri);
+        else
+            setShip(oldIndex - partNumber * Settings::instance()->numFields(), shipType, shipOri);
+
+        return false;
+    }
+
+    return true;
+}
+
+bool BattleField::changeShipOrientation(const int index)
+{
+    // Get ship information
+    FieldData* data = getFieldData(index);
+    if(!data)
+        return false;
+
+    FieldData::ImageType shipType = (FieldData::ImageType)data->type();
+    FieldData::ImageOrientation shipOri = (FieldData::ImageOrientation)data->orientation();
+    int partNumber = data->partNumber();
+    int indexPart0 = 0;
+    FieldData::ImageOrientation shipOriSwitched = FieldData::Horizontal;
+    if(shipOri == FieldData::Horizontal)
+    {
+        shipOriSwitched = FieldData::Vertical;
+        indexPart0 = index - partNumber;
+    }
+    else
+    {
+        shipOriSwitched = FieldData::Horizontal;
+        indexPart0 = index - partNumber * Settings::instance()->numFields();
+    }
+
+    // Remove ship
+    bool remove = removeShip(index);
+    if(!remove)
+        return false;
+
+    // Place ship with new orientation
+    bool place = setShip(indexPart0, shipType, shipOriSwitched);
+    if(!place)
+    {
+        setShip(indexPart0, shipType, shipOri);
+        return false;
+    }
+
+    return true;
+}
+
+int BattleField::shipSizeAtIndex(const int index) const
+{
+    FieldData* data = getFieldData(index);
+    if(data)
+    {
+        QList<FieldData*> items = getFieldDataItemsById(data->shipId());
+        return items.size();
+    }
+
+    return 0;
 }
 
 int BattleField::getPosition(const int row, const int column) const
