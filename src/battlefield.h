@@ -47,6 +47,10 @@ public:
 
     FieldData* getFieldData(const int row, const int column) const;
     FieldData* getFieldData(const int position) const;
+    int getLeftPos(const int position) const;
+    int getRightPos(const int position) const;
+    int getUpPos(const int position) const;
+    int getDownPos(const int position) const;
 
     int rowCount(const QModelIndex &parent) const override;
     QVariant data(const QModelIndex &index, int role) const override;
@@ -86,6 +90,7 @@ private:
     int shipSizeAtIndex(const int index) const;
     void calculateNumberOfShips();
     bool checkRectEmpty(const int xleft, const int ytop, const int xright, const int ybottom) const;
+    bool checkPos(const int position) const;
 };
 
 #endif // BATTLEFIELD_H

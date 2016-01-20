@@ -57,6 +57,7 @@ signals:
     void opponentFieldChanged(BattleField* field);
     void gameInformationChanged(const QString &gameInformation);
     void isRunningChanged(bool isRunning);
+    void gameOver(bool winnerIsUser);
 
 private:
     BattleField* _playerField;

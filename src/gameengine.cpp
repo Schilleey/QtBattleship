@@ -15,7 +15,7 @@ GameEngine::GameEngine(QObject *parent)
       _ai(nullptr),
       _isRunning(false),
       _isPlayersTurn(true),
-      _computerDelay(3000)
+      _computerDelay(1500)
 {
     if(!_playerField)
         _playerField = new BattleField(playerFieldName(), this);
@@ -191,6 +191,16 @@ bool GameEngine::processTurn(int position)
     if(shipsLeft == 0)
     {
         setGameInformation("Game over!");
+
+        bool winnerIsUser;
+        if(isPlayersTurn())
+            winnerIsUser = true;
+        else
+            winnerIsUser = false;
+
+        if(isRunning())
+            emit gameOver(winnerIsUser);
+
         delay(1000);
         stop();
         return true;
@@ -212,7 +222,8 @@ bool GameEngine::processTurn(int position)
 
         do
         {
-            pos = _ai->simpleMemory();
+//            pos = _ai->simpleMemory(); // Simple AI
+            pos = _ai->betterMemory(); // Better AI
 
             if(pos < 0)
             {

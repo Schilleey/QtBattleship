@@ -433,12 +433,50 @@ FieldData *BattleField::getFieldData(const int row, const int column) const
 
 FieldData *BattleField::getFieldData(const int position) const
 {
-    int size = Settings::instance()->numFields();
-    int size2 = size * size;
-    if(position < 0 || position >= size2)
+    if(!checkPos(position))
         return nullptr;
 
     return _model[position];
+}
+
+int BattleField::getLeftPos(const int position) const
+{
+    if(!checkPos(position - 1))
+        return -1;
+
+    if(((position+1) % Settings::instance()->numFields()) == 1)
+        return -1;
+
+    return position - 1;
+}
+
+int BattleField::getRightPos(const int position) const
+{    
+    if(!checkPos(position + 1))
+        return -1;
+
+    if(((position+1) % Settings::instance()->numFields()) == 0)
+        return -1;
+
+    return position + 1;
+}
+
+int BattleField::getUpPos(const int position) const
+{
+    int size = Settings::instance()->numFields();
+    if(!checkPos(position - size))
+        return - 1;
+
+    return position - size;
+}
+
+int BattleField::getDownPos(const int position) const
+{
+    int size = Settings::instance()->numFields();
+    if(!checkPos(position + size))
+        return - 1;
+
+    return position + size;
 }
 
 QList<FieldData *> BattleField::getFieldDataItemsById(const int id) const
@@ -488,6 +526,16 @@ bool BattleField::checkRectEmpty(const int xleft, const int ytop, const int xrig
                 return false;
         }
     }
+
+    return true;
+}
+
+bool BattleField::checkPos(const int position) const
+{
+    int size = Settings::instance()->numFields();
+    int size2 = size * size;
+    if(position < 0 || position >= size2)
+        return false;
 
     return true;
 }

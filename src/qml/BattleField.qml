@@ -240,7 +240,7 @@ Rectangle {
 
         Button {
             id: backButton
-            text: qsTr("Main menu")
+            text: qsTr("Menu")
             visible: canvas.isPlayer
             enabled: !engine.isRunning
             onClicked: {
@@ -288,6 +288,33 @@ Rectangle {
         }
 
         Component.onCompleted: visible = false
+    }
+
+    MessageDialog {
+        id: gameOverDialog
+        title: "Game Over!"
+        icon: StandardIcon.Information
+        standardButtons: StandardButton.Ok
+        onAccepted: {
+            gameOverDialog.close();
+        }
+
+        Component.onCompleted: visible = false
+    }
+
+    Connections {
+        target: engine
+        onGameOver: {
+            if(!canvas.isPlayer)
+                return;
+
+            if(winnerIsUser)
+                gameOverDialog.text = "Winner is... YOU!";
+            else
+                gameOverDialog.text = "Winner is... COMPUTER!";
+
+            gameOverDialog.open();
+        }
     }
 
     Component.onDestruction: {
