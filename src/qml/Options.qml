@@ -44,11 +44,29 @@ Rectangle {
 
         RowLayout {
             anchors.horizontalCenter: parent.horizontalCenter
+
+            Text {
+                text: qsTr("AI difficulty:")
+            }
+
+            ComboBox {
+                id: aiDifficulty
+
+                model: ["simple", "better"]
+                Component.onCompleted: {
+                    currentIndex = Settings.difficulty;
+                }
+            }
+        }
+
+        RowLayout {
+            anchors.horizontalCenter: parent.horizontalCenter
             Button {
                 id: saveOptionsButton
                 text: qsTr("Save")
                 onClicked: {
                     Settings.boardColor = battlefieldColor.currentText;
+                    Settings.difficulty = aiDifficulty.currentIndex;
 
                     options.visible = false;
                     mainMenu.visible = true;

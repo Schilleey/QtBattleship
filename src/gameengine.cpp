@@ -78,7 +78,7 @@ void GameEngine::reset()
 
     playerField()->clear();
     opponentField()->clear();
-    _ai->setLastHit(false);
+    _ai->reset();
     _isPlayersTurn = true;
 }
 
@@ -222,8 +222,11 @@ bool GameEngine::processTurn(int position)
 
         do
         {
-//            pos = _ai->simpleMemory(); // Simple AI
-            pos = _ai->betterMemory(); // Better AI
+            Settings::Difficulty diff = (Settings::Difficulty)Settings::instance()->difficulty();
+            if(diff == Settings::Simple)
+                pos = _ai->simpleMemory(); // Simple AI
+            else
+                pos = _ai->betterMemory(); // Better AI
 
             if(pos < 0)
             {

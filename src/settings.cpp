@@ -31,6 +31,7 @@ void Settings::save()
     setValue("numFields", QVariant(_numFields));
     setValue("fieldSize", QVariant(_fieldSize));
     setValue("boardColor", QVariant(_boardColor));
+    setValue("difficulty", QVariant((int)_difficulty));
 
     qDebug() << "Settings saved.";
 }
@@ -40,6 +41,7 @@ void Settings::load()
     _numFields = value("numFields", QVariant(16)).toInt();
     _fieldSize = value("fieldSize", QVariant(20)).toInt();
     _boardColor = value("boardColor", QVariant("white")).toString();
+    _difficulty = (Settings::Difficulty) value("difficulty", QVariant((int)Better)).toInt();
 }
 
 int Settings::numFields() const
@@ -73,4 +75,15 @@ void Settings::setBoardColor(QString boardColor)
 {
     _boardColor = boardColor;
     emit boardColorChanged(_boardColor);
+}
+
+Settings::Difficulty Settings::difficulty() const
+{
+    return _difficulty;
+}
+
+void Settings::setDifficulty(const Settings::Difficulty &difficulty)
+{
+    _difficulty = difficulty;
+    emit difficultyChanged(_difficulty);
 }

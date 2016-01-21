@@ -155,7 +155,8 @@ void AI::setLastHit(bool lastHit)
 
     if(_lastHit)
     {
-        if(!_shipSunken)
+        Settings::Difficulty diff = Settings::instance()->difficulty();
+        if(!_shipSunken && (diff == Settings::Better))
         {
             if((_currentHitsOnShip == 0) && (_shipFirstHit < 0))
                 _shipFirstHit = _alreadyTried.last();
