@@ -1,3 +1,15 @@
+/**
+ * \class FieldData
+ *
+ * \brief Holds the information for one field of the battlefield
+ *
+ * This class is a plain old C++ object with all information needed
+ * for one single field of the battlefield. It is registered with QML
+ * to send it via QVariant to the FieldView. Most of the implementation
+ * are getters and setters.
+ *
+ */
+
 #ifndef FIELDDATA_H
 #define FIELDDATA_H
 
@@ -65,16 +77,16 @@ public:
     void setPartNumber(int partNumber);
 
 private:
-    int _type;
-    int _shipId;
-    QString _color;
-    int _part;
-    int _partNumber;
-    int _orientation;
-    int _modelPosition;
-    bool _hideImage;
-    bool _isHit;
-    bool _isTried;
+    int _type;          ///< Indicates the type of the ship
+    int _shipId;        ///< ID for the corresponding ship
+    QString _color;     ///< Background color for the field
+    int _part;          ///< Indicates the image for the field
+    int _partNumber;    ///< Index of the part of the ship
+    int _orientation;   ///< Orientation of the corresponding ship
+    int _modelPosition; ///< Index in the linear model
+    bool _hideImage;    ///< Indicates if image should be hidden on the battlefield
+    bool _isHit;        ///< Field is hit or not
+    bool _isTried;      ///< Field has been tried already
 };
 
 Q_DECLARE_METATYPE(FieldData)

@@ -1,3 +1,13 @@
+/**
+ * \class AI
+ *
+ * \brief Artificial intelligence of the opponent
+ *
+ * This class represents the "brain" of the opponent (computer).
+ * There are two difficulties: simple and better
+ *
+ */
+
 #ifndef AI_H
 #define AI_H
 
@@ -43,14 +53,14 @@ private:
     Direction randomDirection() const;
     Direction nextDirection(Direction direction) const;
 
-    BattleField* _field;
-    bool _lastHit;
-    Direction _lastDirection;
-    bool _shipActive;
-    bool _shipSunken;
-    int _currentHitsOnShip;
-    int _shipFirstHit;
-    QList<int> _alreadyTried;
+    BattleField* _field;      ///< Operating battlefield
+    bool _lastHit;            ///< Indicates the last turn was a hit
+    Direction _lastDirection; ///< Last direction
+    bool _shipActive;         ///< Indicates if a ship was hit but the ship is not sunken
+    bool _shipSunken;         ///< Indicates if the ship is now sunken
+    int _currentHitsOnShip;   ///< Number of hits on the active ship
+    int _shipFirstHit;        ///< First position a ship was hit
+    QList<int> _alreadyTried; ///< Holds the indices of the already tried fields
 };
 
 #endif // AI_H

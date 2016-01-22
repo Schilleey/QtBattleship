@@ -4,8 +4,9 @@
  * \brief Global game settings
  *
  * This class provides all informations about the game context,
- * such as the number of rows and columns or the shippoints. The
- * Settings object is implemented as a singleton.
+ * such as the number of rows and columns or the difficulty. The
+ * Settings object is implemented as a singleton and can be
+ * accessed from QML. Most of the class are getters and setters.
  *
  */
 

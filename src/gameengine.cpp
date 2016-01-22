@@ -172,12 +172,14 @@ bool GameEngine::processTurn(int position)
     if(!isRunning())
         return true;
 
+    // Get active battlefield based on players turn
     BattleField* activeField;
     if(isPlayersTurn())
         activeField = opponentField();
     else
         activeField = playerField();
 
+    // Test the position on the battlefield for a hit
     bool hit = !activeField->fieldIsEmpty(position);
     bool ok = activeField->setFieldHit(position, hit);
 
@@ -187,6 +189,7 @@ bool GameEngine::processTurn(int position)
     if(!ok)
         return false;
 
+    // Get number of ships to probably end the game
     int shipsLeft = activeField->numberOfShips();
     if(shipsLeft == 0)
     {
@@ -222,6 +225,7 @@ bool GameEngine::processTurn(int position)
 
         do
         {
+            // Get position from AI based on difficulty
             Settings::Difficulty diff = (Settings::Difficulty)Settings::instance()->difficulty();
             if(diff == Settings::Simple)
                 pos = _ai->simpleMemory(); // Simple AI

@@ -3,7 +3,10 @@
  *
  * \brief Logic implementation
  *
- * This class implements all the game logic. TODO
+ * This class implements all the game logic. Further
+ * here is the initialization of the battelfields and
+ * the AI done. The GameEngine can be accessed from
+ * QML.
  *
  */
 
@@ -60,13 +63,13 @@ signals:
     void gameOver(bool winnerIsUser);
 
 private:
-    BattleField* _playerField;
-    BattleField* _opponentField;
-    AI* _ai;
-    bool _isRunning;
-    bool _isPlayersTurn;
-    QString _gameInformation;
-    int _computerDelay;
+    BattleField* _playerField;   ///< Players battlefield
+    BattleField* _opponentField; ///< Opponents battlefield
+    AI* _ai;                     ///< The AI object
+    bool _isRunning;             ///< Indicates that the game is running
+    bool _isPlayersTurn;         ///< Indicates players turn
+    QString _gameInformation;    ///< Gives an information on the GUI
+    int _computerDelay;          ///< Delay in milliseconds for the AIs turn
 };
 
 #endif // GAMEENGINE_H

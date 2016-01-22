@@ -32,33 +32,25 @@ void BattleField::initialize()
     calculateNumberOfShips();
 }
 
-void BattleField::setField(int row, int column, int data)
-{
-    Q_UNUSED(data);
-
-    int position = getPosition(row, column);
-
-    QColor randomColor(rand()%255, rand()%255, rand()%255);
-    _model[position]->setColor(randomColor.name());
-
-    updateField(position);
-}
-
 bool BattleField::setFieldHit(int position, bool hit)
 {
     FieldData* fieldData = getFieldData(position);
     if(fieldData)
     {
+        // Check if field is already tried
         if(fieldData->isTried())
             return false;
 
+        // Set information on the field
         fieldData->setIsHit(hit);
         fieldData->setIsTried(true);
 
         if(hit)
         {
+            // Visualize a hit
             fieldData->setColor("#00ff00");
 
+            // Check if ship is sunken
             QList<FieldData*> shipFields = _fieldsById[fieldData->shipId()];
             bool shipSunken = true;
             foreach(FieldData* field, shipFields)
@@ -68,6 +60,7 @@ bool BattleField::setFieldHit(int position, bool hit)
                     break;
             }
 
+            // If ship is sunken emit a signal with the new number of ships
             if(shipSunken)
             {
                 _numberOfShips--;

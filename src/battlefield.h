@@ -1,9 +1,13 @@
 /**
  * \class BattleField
  *
- * \brief Battlefield related informations
+ * \brief Battlefield related information
  *
- * This class represents the battlefield of the game. TODO
+ * This class represents the battlefield of the game (model).
+ * It provides functions for ship placement and for obtaining
+ * information about the underlying model. Further it provides
+ * many functions to access from QML. The model is rendered using
+ * the FieldView class.
  *
  */
 
@@ -38,7 +42,6 @@ public:
     Q_INVOKABLE bool moveShip(const int oldIndex, const int newIndex);
     Q_INVOKABLE bool changeShipOrientation(const int index);
 
-    void setField(int row, int column, int data);
     bool setFieldHit(int position, bool hit);
     bool setShip(int row, int column, FieldData::ImageType type, FieldData::ImageOrientation orientation);
     bool setShip(int position, FieldData::ImageType type, FieldData::ImageOrientation orientation);
@@ -78,12 +81,12 @@ public slots:
     void updateModelSize(const int numFields);
 
 private:
-    QVector<FieldData*> _model;
-    QMap<int, QList<FieldData*> > _fieldsById;
-    QString _name;
-    int _currentShipId;
-    int _numberOfShips;
-    bool _isInitialized;
+    QVector<FieldData*> _model;                ///< The main model with all information
+    QMap<int, QList<FieldData*> > _fieldsById; ///< Map to get all fields related to a ship id
+    QString _name;                             ///< Name of battlefield
+    int _currentShipId;                        ///< ID of the current ship (gets incremented).
+    int _numberOfShips;                        ///< Number of all ships on the battelfield
+    bool _isInitialized;                       ///< Indicates if the battlefield is already initialized
 
     int getPosition(const int row, const int column) const;
     QList<FieldData*> getFieldDataItemsById(const int id) const;

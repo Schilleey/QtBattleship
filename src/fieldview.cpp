@@ -17,6 +17,7 @@ void FieldView::paint(QPainter *painter)
 {
     const FieldData& fielddata = _data.value<FieldData>();
 
+    // Get rendering information
     QString fieldColor = fielddata.color();
     fieldColor = (fieldColor.isEmpty()) ? Settings::instance()->boardColor() : fieldColor;
     QColor color(fieldColor);
@@ -61,6 +62,7 @@ void FieldView::setData(const QVariant &data)
         {
             break;
         }
+    // Different kinds of ship graphics could be used here.
     case FieldData::BattleShip:
     case FieldData::Cruiser:
     case FieldData::Destroyer:

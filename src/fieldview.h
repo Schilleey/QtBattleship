@@ -1,3 +1,13 @@
+/**
+ * \class FieldView
+ *
+ * \brief Renders one field of the battlefield
+ *
+ * This class defines how the rendering of one field of the
+ * battlefield is done. Every ship image is saved as an SVG.
+ *
+ */
+
 #ifndef FIELDVIEW_H
 #define FIELDVIEW_H
 
@@ -21,8 +31,8 @@ public:
     void setData(const QVariant& data);
 
 private:
-    QVariant _data;
-    QSvgRenderer _svgRenderer;
+    QVariant _data;            ///< Actual data from the model
+    QSvgRenderer _svgRenderer; ///< Renderer for svg graphics
 };
 
 #endif // FIELDVIEW_H

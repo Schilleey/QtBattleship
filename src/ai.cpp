@@ -74,15 +74,18 @@ int AI::betterMemory()
 
     do
     {
+        // Check if an active ship is available
         if(shipActive())
         {
             if(!keepPosAndDir)
             {
+                // Get information about the last turn
                 lastPos = _alreadyTried.last();
                 lastDir = lastDirection();
                 keepPosAndDir = false;
             }
 
+            // Get next position
             if(lastHit())
             {
                 nextPos = positionInDirection(lastDir, lastPos);
@@ -103,6 +106,7 @@ int AI::betterMemory()
                 }
             }
 
+            // If the position is not valid, try an other one
             if(nextPos < 0)
             {
                 if(_currentHitsOnShip >= 2)
@@ -115,6 +119,7 @@ int AI::betterMemory()
                 continue;
             }
 
+            // If position was already tried, try an other one
             if(_alreadyTried.contains(nextPos))
             {
                 lastDir = nextDirection(lastDir);
@@ -127,10 +132,12 @@ int AI::betterMemory()
                 ok = true;
             }
 
+            // Set the next position
             position = nextPos;
         }
         else
         {
+            // If no active ship is available, pick random position
             position = simpleMemory();
             _shipSunken = false;
             ok = true;

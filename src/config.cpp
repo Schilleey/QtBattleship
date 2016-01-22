@@ -23,6 +23,8 @@ int imageOfShip(FieldData::ImageType type, int part)
 
 QList<int> shipsPerBattlefield(int size)
 {
+    // Here are the number of ships for each battlefield size defined
+    // ship size: { not in use, 5, 4, 3, 2 }
     const static int ships[19][FieldData::typeSize] = {
         { 0, 0, 1, 2, 3 }, // 8
         { 0, 0, 2, 3, 3 }, // 9
